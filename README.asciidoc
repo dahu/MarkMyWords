@@ -1,0 +1,20 @@
+MarkMyWords
+-----------
+
+__Arbitrary bookmarks for your files and Vim's help docs.__
+
+.Marking the current line:
+
+  :MMWMarkLine
+
+.Jumping to a bookmark:
+
+  :MMWSelect <tag>
+
+Tab completion supported. Try `*` at the start of the tag for better
+expansion.
+
+Default maps:
+
+* `<leader>ml` -> `<Plug>MMW_MarkLine`
+* `<leader>'l` -> `<Plug>MMW_Select`
