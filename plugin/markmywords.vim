@@ -93,6 +93,10 @@ function! MMW_Select(terms)
   endif
 endfunction
 
+function! s:complete(al, cl, cp)
+  return map(filter(taglist(a:al), 'v:val.name =~# "^MMW_"'), 'v:val.name[4:]')
+endfunction
+
 
 " Maps: {{{1
 nnoremap <Plug>MMW_Select   :MMWSelect<space>
@@ -110,7 +114,7 @@ endif
 
 " TODO: create a custom completion
 " -bar relevant here?
-command! -bar -nargs=+ -complete=tag MMWSelect call MMW_Select(<q-args>)
+command! -bar -nargs=+ -complete=customlist,s:complete MMWSelect call MMW_Select(<q-args>)
 command! -bar -nargs=0 -complete=tag MMWMarkLine call MMW_MarkLine()
 
 
