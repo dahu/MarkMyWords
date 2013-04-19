@@ -99,7 +99,7 @@ nnoremap <Plug>MMW_Select   :MMWSelect<space>
 nnoremap <Plug>MMW_MarkLine :MMWMarkLine<CR>
 
 if !hasmapto('<Plug>MMW_Select')
-  nmap <unique><silent> <leader>'l <Plug>MMW_Select
+  nmap <unique> <leader>'l <Plug>MMW_Select
 endif
 
 if !hasmapto('<Plug>MMW_MarkLine')
