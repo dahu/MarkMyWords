@@ -83,6 +83,17 @@ function! MMW_Select(terms)
   let tselect_pattern .= '\)'
   let bt = &bt
   let &bt = ''
+  let tags = taglist(tselect_pattern)
+  if len(tags) == 1
+    let cmd = 'tag ' . tags[0].name
+  elseif len(tags) > 1
+    let cmd = 'tselect /' . tselect_pattern
+  else
+    echohl ErrorMsg
+    echom 'MarkMyWords: No tag matches the given arguments.'
+    echohl None
+    return
+  endif
   try
     exe 'tselect /' . tselect_pattern
   finally
