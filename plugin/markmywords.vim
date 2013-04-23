@@ -95,7 +95,7 @@ function! MMW_Select(terms)
     return
   endif
   try
-    exe 'tselect /' . tselect_pattern
+    exe cmd
   finally
     let &bt = bt
   endtry
