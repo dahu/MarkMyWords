@@ -79,7 +79,8 @@ endfunction
 function! MMW_Select(terms)
   let terms = substitute(a:terms, '^MMW_', '', '')
   let tselect_pattern = '\%(\_^MMW_\)\@<=.\{-}\%('
-  let tselect_pattern .= join(split(terms, ',*\s\+'), '\\|')
+  " Double escaped bars because it's an ex command arg.
+  let tselect_pattern .= join(split(terms, ',*\s\+\|,\s*'), '\\|')
   let tselect_pattern .= '\)'
   let bt = &bt
   let &bt = ''
