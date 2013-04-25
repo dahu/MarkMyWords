@@ -69,7 +69,7 @@ function! MMW_MarkLine()
     echohl NONE
     return
   else
-    let pattern = '/' . pattern
+    let pattern = '/' . escape(pattern, '\.*~^$[]')
   endif
   let tags = input('Tags: ', '', 'tag')
   let tags = 'MMW_' . substitute(tags, ',*\s\+', '_', 'g')
