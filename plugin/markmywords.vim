@@ -44,6 +44,15 @@ function! s:MMW_AddTag(tags, file, pattern)
   try
     silent! let tagset = readfile(g:markmywords_tagfile)
   endtry
+  if len(filter(copy(tagset), 'v:val =~ "^".a:tags'))
+    echohl Question
+    let input = input('Replace existing tag named "'.a:tags.'"? yes/no: ')
+    echohl NONE
+    if input !~? '^y\%[es]$'
+      return
+    endif
+    call filter(tagset, 'v:val !~? "^".a:tags."\\t"')
+  endif
   call add(tagset, a:tags . "\t" . a:file . "\t" . a:pattern)
   if writefile(tagset, g:markmywords_tagfile) == -1
     echoerr "Unable to write to tag file " . g:markmywords_tagfile
