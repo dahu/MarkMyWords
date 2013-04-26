@@ -48,6 +48,7 @@ function! s:MMW_AddTag(tags, file, pattern)
     echohl Question
     let input = input('Replace existing tag named "'.a:tags.'"? yes/no: ')
     echohl NONE
+    redraw!
     if input !~? '^y\%[es]$'
       return
     endif
