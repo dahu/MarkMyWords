@@ -80,12 +80,7 @@ function! MMW_MarkLine()
   let file = expand('%:p')
   let line = line('.')
   let pattern = getline('.')
-  if pattern =~ '^\s*$'
-    echohl Warning
-    echo "Can't tag empty line."
-    echohl NONE
-    return
-  else
+  if pattern !~ '^\s*$'
     let pattern = escape(pattern, '\.*^$[]')
   endif
   let tags = input('Tags: ', '', 'tag')
