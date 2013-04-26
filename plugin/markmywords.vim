@@ -55,7 +55,7 @@ function! s:MMW_AddTag(tags, file, pattern)
   endif
   call add(tagset, a:tags . "\t" . a:file . "\t" . a:pattern)
   if writefile(tagset, g:markmywords_tagfile) == -1
-    echoerr "Unable to write to tag file " . g:markmywords_tagfile
+    echoerr "MMW: Unable to write to tag file " . g:markmywords_tagfile
   endif
 endfunction
 
@@ -81,7 +81,7 @@ function! MMW_MarkLine()
     let pattern = '/' . escape(pattern, '\.*~^$[]')
   endif
   let tags = input('Tags: ', '', 'tag')
-  let tags = 'MMW_' . substitute(tags, ',*\s\+', '_', 'g')
+  let tags = 'MMW_' . substitute(tags, ',*\s\+\|,\+\s*', '_', 'g')
   call s:MMW_AddTag(tags, file, pattern)
 endfunction
 
