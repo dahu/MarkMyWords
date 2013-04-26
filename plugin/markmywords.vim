@@ -39,7 +39,7 @@ endif
 exe 'set tags^=' . g:markmywords_tagfile
 
 " Private Functions: {{{1
-function! s:MMW_AddTag(tags, file, pattern)
+function! s:MMW_AddTag(tags, file, line, pattern)
   let tagset = []
   try
     silent! let tagset = readfile(g:markmywords_tagfile)
@@ -54,7 +54,8 @@ function! s:MMW_AddTag(tags, file, pattern)
     endif
     call filter(tagset, 'v:val !~? "^".a:tags."\\t"')
   endif
-  call add(tagset, a:tags . "\t" . a:file . "\t" . a:pattern)
+  let cmd = 'call MMW_OpenTag(' . a:line . ', ' . string(a:pattern) . ')'
+  call add(tagset, a:tags . "\t" . a:file . "\t" . cmd)
   call sort(tagset)
   if writefile(tagset, g:markmywords_tagfile) == -1
     echoerr "MMW: Unable to write to tag file " . g:markmywords_tagfile
@@ -69,10 +70,15 @@ function! s:ReOpenAsHelp()
   exe lnum
 endfunction
 
+function! s:complete(al, cl, cp)
+  return map(filter(taglist(a:al), 'v:val.name =~# "^MMW_"'), 'v:val.name[4:]')
+endfunction
+
 " Public Interface: {{{1
 function! MMW_MarkLine()
   let tags = ''
   let file = expand('%:p')
+  let line = line('.')
   let pattern = getline('.')
   if pattern =~ '^\s*$'
     echohl Warning
@@ -80,11 +86,11 @@ function! MMW_MarkLine()
     echohl NONE
     return
   else
-    let pattern = '/' . escape(pattern, '\.*~^$[]')
+    let pattern = escape(pattern, '\.*^$[]')
   endif
   let tags = input('Tags: ', '', 'tag')
   let tags = 'MMW_' . substitute(tags, ',*\s\+\|,\+\s*', '_', 'g')
-  call s:MMW_AddTag(tags, file, pattern)
+  call s:MMW_AddTag(tags, file, line, pattern)
 endfunction
 
 function! MMW_Select(terms)
@@ -116,10 +122,17 @@ function! MMW_Select(terms)
   endif
 endfunction
 
-function! s:complete(al, cl, cp)
-  return map(filter(taglist(a:al), 'v:val.name =~# "^MMW_"'), 'v:val.name[4:]')
+function! MMW_OpenTag(line, pattern)
+  if empty(a:pattern)
+    let line = a:line
+  else
+    let line = search(a:pattern, 'wcn')
+    if !line
+      let line = a:line
+    endif
+  endif
+  exec line . 'normal! ^'
 endfunction
-
 
 " Maps: {{{1
 nnoremap <Plug>MMW_Select   :MMWSelect<space>
