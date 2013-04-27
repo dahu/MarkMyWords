@@ -39,7 +39,7 @@ endif
 exe 'set tags^=' . g:markmywords_tagfile
 
 " Private Functions: {{{1
-function! s:MMW_AddTag(tags, file, line, pattern)
+function! s:AddTag(tags, file, line, pattern)
   let tagset = []
   try
     silent! let tagset = readfile(g:markmywords_tagfile)
@@ -89,7 +89,7 @@ function! MMW_MarkLine()
   endif
   let tags = input('Tags: ', '', 'tag')
   let tags = 'MMW_' . substitute(tags, ',*\s\+\|,\+\s*', '_', 'g')
-  call s:MMW_AddTag(tags, file, line, pattern)
+  call s:AddTag(tags, file, line, pattern)
 endfunction
 
 function! MMW_Select(terms)
@@ -122,13 +122,14 @@ function! MMW_Select(terms)
 endfunction
 
 function! MMW_OpenTag(line, pattern)
-  if empty(a:pattern)
-    let line = a:line
-  else
-    let line = search(a:pattern, 'wcn')
-    if !line
-      let line = a:line
+  let line = empty(a:pattern) ? 0 : search(a:pattern, 'wcn')
+  if !line
+    if get(g:, 'mmw_alert_on_fallback', 1)
+      echohl WarningMsg
+      echom 'MMW: The line content has changed and can not be found. Moving the cursor to the fallback line number.'
+      echohl NONE
     endif
+    let line = a:line
   endif
   exec line . 'normal! ^'
 endfunction
