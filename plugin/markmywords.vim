@@ -71,7 +71,11 @@ function! s:ReOpenAsHelp()
 endfunction
 
 function! s:complete(al, cl, cp)
-  return map(filter(taglist(a:al), 'v:val.name =~# "^MMW_"'), 'v:val.name[4:]')
+  let al = a:al
+  if al == ''
+    let al = 'MMW_'
+  endif
+  return map(filter(taglist(al), 'v:val.name =~# "^MMW_"'), 'v:val.name[4:]')
 endfunction
 
 " Public Interface: {{{1
