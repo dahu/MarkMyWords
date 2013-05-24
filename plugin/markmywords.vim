@@ -44,17 +44,21 @@ function! s:AddTag(tags, file, line, pattern)
   try
     silent! let tagset = readfile(g:markmywords_tagfile)
   endtry
-  if len(filter(copy(tagset), 'v:val =~? "^".a:tags'))
-    echohl Question
-    let input = input('Replace existing tag named "'.a:tags.'"? yes/no: ')
-    echohl NONE
-    redraw!
-    if input !~? '^y\%[es]$'
-      return
-    endif
+  if a:tags =~? 'helpmark'
     call filter(tagset, 'v:val !~? "^".a:tags."\\t"')
+  else
+    if len(filter(copy(tagset), 'v:val =~? "^".a:tags'))
+      echohl Question
+      let input = input('Replace existing tag named "'.a:tags.'"? yes/no: ')
+      echohl NONE
+      redraw!
+      if input !~? '^y\%[es]$'
+        return
+      endif
+      call filter(tagset, 'v:val !~? "^".a:tags."\\t"')
+    endif
   endif
-  let cmd = 'call MMW_OpenTag(' . a:line . ', ' . string(a:pattern) . ')'
+  let cmd = 'call MMW_OpenTag(' . a:line . ', "' . escape(a:pattern, '"') . '")'
   call add(tagset, a:tags . "\t" . a:file . "\t" . cmd)
   call sort(tagset)
   if writefile(tagset, g:markmywords_tagfile) == -1
@@ -79,15 +83,19 @@ function! s:complete(al, cl, cp)
 endfunction
 
 " Public Interface: {{{1
-function! MMW_MarkLine()
+function! MMW_MarkLine(...)
   let tags = ''
   let file = expand('%:p')
   let line = line('.')
   let pattern = getline('.')
   if pattern !~ '^\s*$'
-    let pattern = escape(pattern, '\.*^$[]')
+    let pattern = escape(pattern, '\.*^$~[]')
   endif
-  let tags = input('Tags: ', '', 'tag')
+  if a:0
+    let tags = join(a:000, ' ')
+  else
+    let tags = input('Tags: ', '', 'tag')
+  endif
   let tags = 'MMW_' . substitute(tags, ',*\s\+\|,\+\s*', '_', 'g')
   call s:AddTag(tags, file, line, pattern)
 endfunction
@@ -153,6 +161,10 @@ endif
 command! -bar -nargs=+ -complete=customlist,s:complete MMWSelect call MMW_Select(<q-args>)
 command! -bar -nargs=0 -complete=tag MMWMarkLine call MMW_MarkLine()
 
+augroup MMW
+  au!
+  au BufLeave * if &ft =~? 'help' | call MMW_MarkLine('helpmark') | endif
+augroup END
 
 " Teardown:{{{1
 "reset &cpo back to users setting
