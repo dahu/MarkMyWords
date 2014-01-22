@@ -142,6 +142,10 @@ function! MMW_OpenTag(line, pattern)
   exec line . 'normal! ^'
 endfunction
 
+function! MMW_ListTags()
+  return map(taglist('^MMW_'), 'substitute(v:val.name, "^MMW_", "", "")')
+endfunction
+
 " Maps: {{{1
 nnoremap <Plug>MMW_Select   :MMWSelect<space>
 nnoremap <Plug>MMW_MarkLine :MMWMarkLine<CR>
@@ -160,6 +164,8 @@ endif
 " -bar relevant here?
 command! -bar -nargs=+ -complete=customlist,s:complete MMWSelect call MMW_Select(<q-args>)
 command! -bar -nargs=0 -complete=tag MMWMarkLine call MMW_MarkLine()
+
+command! -bar -nargs=0 MMWList echo join(MMW_ListTags(), ', ')
 
 augroup MMW
   au!
