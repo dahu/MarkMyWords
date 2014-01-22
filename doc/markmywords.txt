@@ -1,0 +1,91 @@
+*MarkMyWords.txt*	Arbitrary bookmarks for your files and Vim's help docs.
+
+
+			VIM REFERENCE MANUAL	by Barry Arthur
+
+
+Help on using MarkMyWords                                          *MarkMyWords*
+
+1. Introduction				|MarkMyWords-intro|
+2. Usage                                |MarkMyWords-usage|
+3. Configuration			|MarkMyWords-configuration|
+
+==============================================================================
+ 1. INTRODUCTION                                             *MarkMyWords-intro*
+
+MarkMyWords provides an easy bookmarking feature for a line in your file or
+bookmarking one of Vim's help files to allow you to come back to it at a later
+time, even after you close Vim.
+
+==============================================================================
+ 2. USAGE                                                    *MarkMyWords-usage*
+
+Bookmarking a line-
+
+When inside a file or a vim help file, place the cursor at a line you want to
+come back to later (i.e. "bookmark") via: >
+
+    :MMWMarkLine
+<
+or using the default mapping: >
+    
+    <leader>ml
+<
+
+Jumping to a Bookmark-
+
+Open up Vim and execute: >
+
+    :MMWSelect <tag> 
+
+<
+where tag is the name you gave to that bookmark. 
+
+Or use the default mapping: >
+
+    <leader>'l
+<
+
+
+:MWSelect also supports tab completion. Try typing * at the start of the tag
+for better expansion. 
+
+
+==============================================================================
+ 3. CONFIGURATION                                    *MarkMyWords-configuration*
+
+The following aspects of MarkMyWords' behavior are configurable with entries
+like: >
+
+    let g:markmywords_tagfile = $HOME/markmywords.tags
+<
+in your |$MYVIMRC|.
+
+Options:-
+
+|'markmywords_tagfile'|		Set the location of the bookmark tags file.
+                                The default location is in MarkMyWords' plugin
+                                directory.
+
+Maps:-
+
+Override the default mappings shown here by providing your own maps in
+|$MYVIMRC| like so: >
+    
+        nmap <leader>ml :MMWMarkLine<CR>
+        nmap <leader>'l :MMWSelect<SPACE>
+<
+
+:MMWMarkLine                    Mark a line. This will ask for a name of the
+                                bookmark and store it in the tags file.
+
+:MMWSelect <tagname>            Jump to a previously bookmarked line, where
+                                tagname is the name of the bookmark. Tab
+                                completion while typing the tagname is
+                                supported.
+
+:MMWList                        Returns the list of bookmarks.
+
+
+Template From: https://github.com/dahu/Area-41/
+  vim:tw=78:ts=8:ft=help:norl:
