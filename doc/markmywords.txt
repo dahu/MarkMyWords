@@ -20,7 +20,7 @@ time, even after you close Vim.
 ==============================================================================
  2. USAGE                                                    *MarkMyWords-usage*
 
-Bookmarking a line-
+Bookmarking a line~
 
 When inside a file or a vim help file, place the cursor at a line you want to
 come back to later (i.e. "bookmark") via: >
@@ -28,18 +28,18 @@ come back to later (i.e. "bookmark") via: >
     :MMWMarkLine
 <
 or using the default mapping: >
-    
+
     <leader>ml
 <
 
-Jumping to a Bookmark-
+Jumping to a Bookmark~
 
 Open up Vim and execute: >
 
-    :MMWSelect <tag> 
+    :MMWSelect <tag>
 
 <
-where tag is the name you gave to that bookmark. 
+where tag is the name you gave to that bookmark.
 
 Or use the default mapping: >
 
@@ -48,7 +48,7 @@ Or use the default mapping: >
 
 
 :MWSelect also supports tab completion. Try typing * at the start of the tag
-for better expansion. 
+for better expansion.
 
 
 ==============================================================================
@@ -61,17 +61,17 @@ like: >
 <
 in your |$MYVIMRC|.
 
-Options:-
+Options:~
 
 |'markmywords_tagfile'|		Set the location of the bookmark tags file.
                                 The default location is in MarkMyWords' plugin
                                 directory.
 
-Maps:-
+Maps:~
 
 Override the default mappings shown here by providing your own maps in
 |$MYVIMRC| like so: >
-    
+
         nmap <leader>ml :MMWMarkLine<CR>
         nmap <leader>'l :MMWSelect<SPACE>
 <
