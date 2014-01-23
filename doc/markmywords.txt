@@ -4,30 +4,30 @@
 			VIM REFERENCE MANUAL	by Barry Arthur
 
 
-Help on using MarkMyWords                                          *MarkMyWords*
+Help on using MarkMyWords                                    *MarkMyWords*
 
 1. Introduction				|MarkMyWords-intro|
-2. Usage                                |MarkMyWords-usage|
+2. Usage				|MarkMyWords-usage|
 3. Configuration			|MarkMyWords-configuration|
 
 ==============================================================================
- 1. INTRODUCTION                                             *MarkMyWords-intro*
+ 1. INTRODUCTION                                       *MarkMyWords-intro*
 
-MarkMyWords provides an easy bookmarking feature for a line in your file or
-bookmarking one of Vim's help files to allow you to come back to it at a later
-time, even after you close Vim.
+MarkMyWords provides persistent bookmarking of arbitrary lines in files and the
+Vim help system. Quickly and easily jump to bookmarked locations, even after
+restarting Vim.
 
 ==============================================================================
- 2. USAGE                                                    *MarkMyWords-usage*
+ 2. USAGE                                              *MarkMyWords-usage*
 
 Bookmarking a line~
 
-When inside a file or a vim help file, place the cursor at a line you want to
+When inside a file or a Vim help file, place the cursor at a line you want to
 come back to later (i.e. "bookmark") via: >
 
     :MMWMarkLine
 <
-or using the default mapping: >
+or use the default mapping: >
 
     <leader>ml
 <
@@ -47,12 +47,13 @@ Or use the default mapping: >
 <
 
 
-:MWSelect also supports tab completion. Try typing * at the start of the tag
-for better expansion.
+:MMWSelect also supports tab completion (see |wildchar|). Try typing * at the
+start of the tag for better expansion. |c_ctrl-d| will display a list of all
+bookmarks or those matching the currently entered partial.
 
 
 ==============================================================================
- 3. CONFIGURATION                                    *MarkMyWords-configuration*
+ 3. CONFIGURATION                              *MarkMyWords-configuration*
 
 The following aspects of MarkMyWords' behavior are configurable with entries
 like: >
@@ -76,16 +77,21 @@ Override the default mappings shown here by providing your own maps in
         nmap <leader>'l :MMWSelect<SPACE>
 <
 
-:MMWMarkLine                    Mark a line. This will ask for a name of the
-                                bookmark and store it in the tags file.
+Commands:~
+
+:MMWMarkLine                    Mark the current line. This will prompt for a
+                                bookmark name and store it in the tags file.
 
 :MMWSelect <tagname>            Jump to a previously bookmarked line, where
-                                tagname is the name of the bookmark. Tab
-                                completion while typing the tagname is
-                                supported.
+                                tagname is the name of the bookmark. Tab (|wc|)
+                                completion and |c_ctrl-d| expansion while typing
+                                the tagname are supported.
 
-:MMWList                        Returns the list of bookmarks.
+:MMWList                        Displays the list of bookmarks.
 
+Functions:~
+
+MMW_ListTags()                  Returns the MMW bookmarks as a list.
 
 Template From: https://github.com/dahu/Area-41/
   vim:tw=78:ts=8:ft=help:norl:
