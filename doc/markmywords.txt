@@ -20,6 +20,7 @@ restarting Vim.
 ==============================================================================
  2. USAGE                                              *MarkMyWords-usage*
 
+                                                          *MMW_MarkLine()*
 Bookmarking a line~
 
 When inside a file or a Vim help file, place the cursor at a line you want to
@@ -27,30 +28,48 @@ come back to later (i.e. "bookmark") via: >
 
     :MMWMarkLine
 <
-or use the default mapping: >
+or use the default mapping (<plug>MMW_MarkLine): >
 
     <leader>ml
 <
 
+                                                            *MMW_Select()*
 Jumping to a Bookmark~
 
 Open up Vim and execute: >
 
     :MMWSelect <tag>
-
 <
 where tag is the name you gave to that bookmark.
 
-Or use the default mapping: >
+Or use the default mapping (<plug>MMW_Select): >
 
     <leader>'l
 <
-
 
 :MMWSelect also supports tab completion (see |wildchar|). Try typing * at the
 start of the tag for better expansion. |c_ctrl-d| will display a list of all
 bookmarks or those matching the currently entered partial.
 
+                                                            *MMW_Browse()*
+Browsing Bookmarks~
+
+Open up Vim and execute: >
+
+    :MMWBrowse
+<
+
+Or use the default mapping (<plug>MMW_Browse): >
+
+    <leader>mb
+<
+
+NOTE: Depends on https://github.com/dahu/VimFindsMe
+
+This opens a |VimFindsMe| browser which uses a live |:Filter| to search for the
+desired tag if you have https://github.com/dahu/Vimple installed. Pressing
+<enter> on a line from within the VFM browser will trigger |MMW_Select| on the
+related term.
 
 ==============================================================================
  3. CONFIGURATION                              *MarkMyWords-configuration*
@@ -73,8 +92,9 @@ Maps:~
 Override the default mappings shown here by providing your own maps in
 |$MYVIMRC| like so: >
 
-        nmap <leader>ml :MMWMarkLine<CR>
-        nmap <leader>'l :MMWSelect<SPACE>
+        nmap <leader>ml <plug>MMW_MarkLine
+        nmap <leader>'l <plug>MMW_Select
+        nmap <leader>mb <plug>MMW_Browse
 <
 
 Commands:~
@@ -88,6 +108,9 @@ Commands:~
                                 the tagname are supported.
 
 :MMWList                        Displays the list of bookmarks.
+
+:MMWBrowse                      Displays all bookmarks in a VimFindsMe window.
+                                Requires: https://github.com/dahu/VimFindsMe
 
 Functions:~
 

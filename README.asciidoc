@@ -14,7 +14,16 @@ __Arbitrary bookmarks for your files and Vim's help docs.__
 Tab completion supported. Try `*` at the start of the tag for better
 expansion.
 
+.Listing bookmarks:
+
+  :MMWList
+
+.Browsing bookmarks (requires https://github.com/dahu/VimFindsMe[VimFindsMe]):
+
+  :MMWBrowse
+
 Default maps:
 
 * `<leader>ml` -> `<Plug>MMW_MarkLine`
 * `<leader>'l` -> `<Plug>MMW_Select`
+* `<leader>mb` -> `<Plug>MMW_Browse`

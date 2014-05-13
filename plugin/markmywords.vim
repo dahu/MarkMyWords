@@ -146,9 +146,36 @@ function! MMW_ListTags()
   return map(taglist('^MMW_'), 'substitute(v:val.name, "^MMW_", "", "")')
 endfunction
 
+"""" VimFindsMe plugin
+
+function! s:SID()
+  return "<SNR>" . matchstr(expand('<sfile>'), '<SNR>\zs\d\+_\zeSID$')
+endfun
+
+function! s:mmw_vfmbrowse_taglist()
+  return map(vfm#readfile(g:markmywords_tagfile),
+        \ 'substitute(v:val, "^\\S\\+\t\\S\\+\\zs.*", "", "")')
+endfunction
+
+function! s:mmw_vfmbrowse_callback()
+  return MMW_Select(matchstr(vfm#select_line(), '^\S\+'))
+endfunction
+
+function! MMW_VFMBrowse()
+  if ! exists('g:vfm_version')
+    echohl Warning
+    echom 'MMW_VFMBrowse() requires https://github.com/dahu/VimFindsMe'
+    echohl None
+  else
+    call vfm#show_list_overlay(s:mmw_vfmbrowse_taglist())
+    call vfm#overlay_controller({'<enter>' : ':call ' . s:SID() . 'mmw_vfmbrowse_callback()'})
+  endif
+endfunction
+
 " Maps: {{{1
 nnoremap <Plug>MMW_Select   :MMWSelect<space>
 nnoremap <Plug>MMW_MarkLine :MMWMarkLine<CR>
+nnoremap <Plug>MMW_Browse   :MMWBrowse<cr>
 
 if !hasmapto('<Plug>MMW_Select')
   nmap <unique> <leader>'l <Plug>MMW_Select
@@ -156,6 +183,10 @@ endif
 
 if !hasmapto('<Plug>MMW_MarkLine')
   nmap <unique><silent> <leader>ml <Plug>MMW_MarkLine
+endif
+
+if !hasmapto('<Plug>MMW_Browse')
+  nmap <unique> <leader>mb <Plug>MMW_Browse
 endif
 
 " Commands: {{{1
@@ -166,6 +197,7 @@ command! -bar -nargs=+ -complete=customlist,s:complete MMWSelect call MMW_Select
 command! -bar -nargs=0 -complete=tag MMWMarkLine call MMW_MarkLine()
 
 command! -bar -nargs=0 MMWList echo join(MMW_ListTags(), ', ')
+command! -bar -nargs=0 MMWBrowse call MMW_VFMBrowse()
 
 augroup MMW
   au!
