@@ -69,7 +69,13 @@ endfunction
 function! s:ReOpenAsHelp()
   let file = expand('%:t')
   let lnum = line('.')
-  bdelete
+  buffer #
+  bwipe #
+  if exists('g:MMW_altbuf')
+    exe 'buffer ' . g:MMW_altbuf
+    buffer #
+    unlet g:MMW_altbuf
+  endif
   exe 'help ' . file
   exe lnum
 endfunction
@@ -119,6 +125,7 @@ function! MMW_Select(terms)
     echohl None
     return
   endif
+  let g:MMW_altbuf = expand('#')
   try
     exe cmd
   finally
