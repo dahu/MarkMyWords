@@ -69,12 +69,12 @@ endfunction
 function! s:ReOpenAsHelp()
   let file = expand('%:t')
   let lnum = line('.')
+  let altbuf = b:MMW_altbuf
   buffer #
   bwipe #
-  if exists('g:MMW_altbuf')
-    exe 'buffer ' . g:MMW_altbuf
+  if buflisted(altbuf)
+    exe 'buffer ' . altbuf
     buffer #
-    unlet g:MMW_altbuf
   endif
   exe 'help ' . file
   exe lnum
@@ -125,11 +125,13 @@ function! MMW_Select(terms)
     echohl None
     return
   endif
-  let g:MMW_altbuf = expand('#')
+  let altbuf = bufnr('#')
+  echom 'altbuf=' . altbuf
   try
     exe cmd
   finally
     let &bt = bt
+    let b:MMW_altbuf = altbuf
   endtry
   if &ft =~# 'help'
     call s:ReOpenAsHelp()
@@ -159,23 +161,23 @@ function! s:SID()
   return "<SNR>" . matchstr(expand('<sfile>'), '<SNR>\zs\d\+_\zeSID$')
 endfun
 
-function! s:mmw_vfmbrowse_taglist()
-  return map(vfm#readfile(g:markmywords_tagfile),
+function! s:mmw_browse_taglist()
+  return map(file#read(g:markmywords_tagfile),
         \ 'substitute(v:val, "^\\S\\+\t\\S\\+\\zs.*", "", "")')
 endfunction
 
-function! s:mmw_vfmbrowse_callback()
-  return MMW_Select(matchstr(vfm#select_line(), '^\S\+'))
+function! s:mmw_browse_callback()
+  return MMW_Select(matchstr(overlay#select_line(), '^\S\+'))
 endfunction
 
-function! MMW_VFMBrowse()
-  if ! exists('g:vfm_version')
+function! MMW_Browse()
+  if ! exists('g:vimple_version')
     echohl Warning
-    echom 'MMW_VFMBrowse() requires https://github.com/dahu/VimFindsMe'
+    echom 'MMW_Browse() requires https://github.com/dahu/Vimple'
     echohl None
   else
-    call vfm#show_list_overlay(s:mmw_vfmbrowse_taglist())
-    call vfm#overlay_controller({'<enter>' : ':call ' . s:SID() . 'mmw_vfmbrowse_callback()'})
+    call overlay#show(s:mmw_browse_taglist()
+          \, {'<enter>' : ':call ' . s:SID() . 'mmw_browse_callback()<cr>'})
   endif
 endfunction
 
@@ -204,7 +206,7 @@ command! -bar -nargs=+ -complete=customlist,s:complete MMWSelect call MMW_Select
 command! -bar -nargs=0 -complete=tag MMWMarkLine call MMW_MarkLine()
 
 command! -bar -nargs=0 MMWList echo join(MMW_ListTags(), ', ')
-command! -bar -nargs=0 MMWBrowse call MMW_VFMBrowse()
+command! -bar -nargs=0 MMWBrowse call MMW_Browse()
 
 augroup MMW
   au!
